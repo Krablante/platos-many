@@ -97,7 +97,78 @@
     .matrix-char-smooth {
       display: inline-block; /* Ensures proper rendering of animation */
       animation: matrixCharSmoothChange 0.3s ease-out;
-      /* will-change: opacity; /* Removed to troubleshoot Chrome rendering glitch */
+    }
+
+    /* Custom Slider Styles */
+    input[type="range"].chaos-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%; /* Tailwind's max-w-xs will constrain this */
+      height: 8px;
+      background: #374151; /* bg-gray-700 from Tailwind */
+      border-radius: 4px;
+      outline: none;
+      opacity: 0.8;
+      transition: opacity .2s;
+      cursor: pointer;
+    }
+
+    input[type="range"].chaos-slider:hover {
+      opacity: 1;
+    }
+
+    input[type="range"].chaos-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #8B5CF6; /* purple-500 from Tailwind */
+      border-radius: 50%;
+      border: 2px solid #1f2937; /* bg-gray-800 for a bit of depth */
+      cursor: pointer;
+      transition: background-color .2s, transform .2s;
+    }
+    input[type="range"].chaos-slider::-webkit-slider-thumb:hover {
+        background: #A78BFA; /* purple-400 */
+    }
+    input[type="range"].chaos-slider::-webkit-slider-thumb:active {
+        transform: scale(1.1);
+    }
+
+
+    input[type="range"].chaos-slider::-moz-range-thumb {
+      width: 18px; 
+      height: 18px;
+      background: #8B5CF6; /* purple-500 */
+      border-radius: 50%;
+      border: 2px solid #1f2937; /* bg-gray-800 */
+      cursor: pointer;
+      transition: background-color .2s, transform .2s;
+    }
+    input[type="range"].chaos-slider::-moz-range-thumb:hover {
+        background: #A78BFA; /* purple-400 */
+    }
+    input[type="range"].chaos-slider::-moz-range-thumb:active {
+        transform: scale(1.1);
+    }
+
+    input[type="range"].chaos-slider::-ms-thumb {
+      width: 20px;
+      height: 20px;
+      background: #8B5CF6; /* purple-500 */
+      border-radius: 50%;
+      border: 2px solid #1f2937; /* bg-gray-800 */
+      cursor: pointer;
+      transition: background-color .2s, transform .2s;
+    }
+    input[type="range"].chaos-slider::-ms-thumb:hover {
+        background: #A78BFA; /* purple-400 */
+    }
+    input[type="range"].chaos-slider::-ms-thumb:active {
+        transform: scale(1.1);
+    }
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
     }
 
   </style>
@@ -110,6 +181,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="text-gray-100">
   <div id="root"></div>

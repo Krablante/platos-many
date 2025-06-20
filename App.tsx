@@ -4,7 +4,7 @@ import { TransformedTextView } from './components/TransformedTextView';
 import { applyRandomStringTransformation, animateHeadline } from './utils/transformations';
 
 const LOCAL_STORAGE_KEY = 'chaoticNote';
-const TRANSFORMATION_INTERVAL_MS = 750; // Milliseconds for note transformation
+const DEFAULT_TRANSFORMATION_INTERVAL_MS = 750; // Milliseconds for note transformation
 const INITIAL_HEADLINE = "Заметки-Метаморфозы";
 const HEADLINE_SEQUENTIAL_CHAR_INTERVAL_MS = 120; // Speed of individual char change in headline
 
@@ -23,6 +23,7 @@ const TrashIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) 
 const App: React.FC = () => {
   const [note, setNote] = useState<string>('');
   const [isTransforming, setIsTransforming] = useState<boolean>(true);
+  const [transformationSpeed, setTransformationSpeed] = useState<number>(DEFAULT_TRANSFORMATION_INTERVAL_MS);
   
   // Headline animation state
   const [animatedHeadline, setAnimatedHeadline] = useState<string>(INITIAL_HEADLINE);
@@ -52,63 +53,63 @@ const App: React.FC = () => {
   }, [note]);
 
   useEffect(() => {
-    if (!isTransforming) {
-      return () => {}; // No cleanup needed if no interval was set
+    let noteIntervalId: number | undefined = undefined;
+    let headlineIntervalId: number | undefined = undefined;
+
+    if (isTransforming) {
+      noteIntervalId = setInterval(() => {
+        setNote(prevNote => applyRandomStringTransformation(prevNote));
+      }, transformationSpeed) as unknown as number; // Use dynamic transformationSpeed
+    
+      headlineIntervalId = setInterval(() => {
+        // Update one character of animatedHeadline towards the target in ref
+        setAnimatedHeadline(prevHeadline => {
+          const currentDisplayChars = prevHeadline.split('');
+          const targetChars = (targetHeadlineRef.current || "").split(''); 
+          const updateIdx = headlineIndexRef.current;
+
+          if (updateIdx >= 0 && updateIdx < currentDisplayChars.length && updateIdx < targetChars.length && currentDisplayChars[updateIdx] !== targetChars[updateIdx]) {
+            currentDisplayChars[updateIdx] = targetChars[updateIdx];
+            return currentDisplayChars.join('');
+          }
+          return prevHeadline;
+        });
+
+        // Advance index and potentially change direction and target
+        let nextIndex = headlineIndexRef.current;
+        let newDirection = headlineDirectionRef.current; 
+
+        if (newDirection === 'ltr') {
+          if (nextIndex < INITIAL_HEADLINE.length - 1) {
+            nextIndex++;
+          } else { 
+            newDirection = 'rtl';
+            const newTarget = animateHeadline(INITIAL_HEADLINE);
+            targetHeadlineRef.current = newTarget; 
+            setTargetHeadlineActualString(newTarget); 
+          }
+        } else { 
+          if (nextIndex > 0) {
+            nextIndex--;
+          } else { 
+            newDirection = 'ltr';
+            const newTarget = animateHeadline(INITIAL_HEADLINE);
+            targetHeadlineRef.current = newTarget; 
+            setTargetHeadlineActualString(newTarget); 
+          }
+        }
+        
+        setCurrentHeadlineUpdateIndex(nextIndex);
+        setCurrentHeadlineDirection(newDirection);
+
+      }, HEADLINE_SEQUENTIAL_CHAR_INTERVAL_MS) as unknown as number;
     }
 
-    const noteIntervalId = setInterval(() => {
-      setNote(prevNote => applyRandomStringTransformation(prevNote));
-    }, TRANSFORMATION_INTERVAL_MS);
-    
-    const headlineIntervalId = setInterval(() => {
-      // Update one character of animatedHeadline towards the target in ref
-      setAnimatedHeadline(prevHeadline => {
-        const currentDisplayChars = prevHeadline.split('');
-        // Ensure targetHeadlineRef.current is a string before calling split
-        const targetChars = (targetHeadlineRef.current || "").split(''); 
-        const updateIdx = headlineIndexRef.current;
-
-        if (updateIdx >= 0 && updateIdx < currentDisplayChars.length && updateIdx < targetChars.length && currentDisplayChars[updateIdx] !== targetChars[updateIdx]) {
-          currentDisplayChars[updateIdx] = targetChars[updateIdx];
-          return currentDisplayChars.join('');
-        }
-        return prevHeadline;
-      });
-
-      // Advance index and potentially change direction and target
-      let nextIndex = headlineIndexRef.current;
-      let newDirection = headlineDirectionRef.current; 
-
-      if (newDirection === 'ltr') {
-        if (nextIndex < INITIAL_HEADLINE.length - 1) {
-          nextIndex++;
-        } else { 
-          newDirection = 'rtl';
-          const newTarget = animateHeadline(INITIAL_HEADLINE);
-          targetHeadlineRef.current = newTarget; 
-          setTargetHeadlineActualString(newTarget); 
-        }
-      } else { 
-        if (nextIndex > 0) {
-          nextIndex--;
-        } else { 
-          newDirection = 'ltr';
-          const newTarget = animateHeadline(INITIAL_HEADLINE);
-          targetHeadlineRef.current = newTarget; 
-          setTargetHeadlineActualString(newTarget); 
-        }
-      }
-      
-      setCurrentHeadlineUpdateIndex(nextIndex);
-      setCurrentHeadlineDirection(newDirection);
-
-    }, HEADLINE_SEQUENTIAL_CHAR_INTERVAL_MS);
-
     return () => {
-      clearInterval(noteIntervalId);
-      clearInterval(headlineIntervalId);
+      if (noteIntervalId) clearInterval(noteIntervalId);
+      if (headlineIntervalId) clearInterval(headlineIntervalId);
     };
-  }, [isTransforming]); 
+  }, [isTransforming, transformationSpeed]); // Add transformationSpeed to dependencies
 
   const handleNoteChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNote(event.target.value);
@@ -163,6 +164,24 @@ const App: React.FC = () => {
             <TrashIcon className="w-5 h-5 mr-2" />
             Очистить Заметку
           </button>
+        </div>
+
+        <div className="flex flex-col items-center space-y-3 mt-6 pt-4 border-t border-gray-700/50">
+          <label htmlFor="chaos-speed-slider" className="text-sm text-purple-300 tracking-wider">
+            Скорость Хаоса: <span className="font-semibold text-purple-200 tabular-nums">{transformationSpeed} мс</span>
+          </label>
+          <input
+            id="chaos-speed-slider"
+            type="range"
+            min="100"
+            max="2000"
+            step="50"
+            value={transformationSpeed}
+            onChange={(e) => setTransformationSpeed(Number(e.target.value))}
+            className="w-full max-w-xs chaos-slider"
+            aria-label="Регулятор скорости трансформаций заметки"
+            aria-valuetext={`${transformationSpeed} миллисекунд`}
+          />
         </div>
 
         <textarea
