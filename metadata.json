@@ -1,0 +1,6 @@
+{
+  "name": "Chaotic Notes - Заметки-Метаморфозы",
+  "description": "A single-page application for taking a continuous note that constantly undergoes random, beautiful, terrifying, and strange transformations. It embraces anti-consistency, anti-cohesion, and anti-adequacy. The note is stored locally.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

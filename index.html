@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заметки-Метаморфозы</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* Custom scrollbar for a more thematic feel */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111827; /* bg-gray-900 darker */
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #4b5563; /* bg-gray-600 */
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6b7280; /* bg-gray-500 */
+    }
+    body {
+      font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
+      background-color: #0d1117; /* Even darker base for contrast */
+      background-image: 
+        radial-gradient(circle at 25px 25px, rgba(167, 139, 250, 0.08) 2%, transparent 0%), /* Subtle purple dots */
+        radial-gradient(circle at 75px 75px, rgba(59, 130, 246, 0.08) 2%, transparent 0%); /* Subtle blue dots */
+      background-size: 100px 100px;
+      animation: backgroundPan 60s linear infinite;
+    }
+
+    @keyframes backgroundPan {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    .pulse-border-purple {
+      animation: pulseBorderPurple 2s infinite;
+    }
+
+    @keyframes pulseBorderPurple {
+      0%, 100% { border-color: #8B5CF6; box-shadow: 0 0 5px #8B5CF6, 0 0 10px #8B5CF6; }
+      50% { border-color: #A78BFA; box-shadow: 0 0 15px #A78BFA, 0 0 20px #A78BFA; }
+    }
+    
+    .button-glitch {
+      transition: all 0.2s ease-in-out;
+      border: 1px solid transparent;
+    }
+    .button-glitch:hover {
+      text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+    }
+    .button-glitch.transforming-button {
+      border-color: #F472B6; /* Pinkish-red */
+      box-shadow: 0 0 3px #F472B6, inset 0 0 3px #F472B6;
+    }
+     .button-glitch.transforming-button:hover {
+      box-shadow: 0 0 8px #F472B6, inset 0 0 8px #F472B6;
+    }
+
+    .button-glitch.start-transforming-button {
+      border-color: #34D399; /* Greenish */
+       box-shadow: 0 0 3px #34D399, inset 0 0 3px #34D399;
+    }
+    .button-glitch.start-transforming-button:hover {
+      box-shadow: 0 0 8px #34D399, inset 0 0 8px #34D399;
+    }
+
+    .button-glitch.clear-button {
+      border-color: #6B7280; /* Gray */
+      box-shadow: 0 0 3px #6B7280, inset 0 0 3px #6B7280;
+    }
+    .button-glitch.clear-button:hover {
+       box-shadow: 0 0 8px #6B7280, inset 0 0 8px #6B7280;
+    }
+
+    /* Animation for smooth headline character change */
+    @keyframes matrixCharSmoothChange {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .matrix-char-smooth {
+      display: inline-block; /* Ensures proper rendering of animation */
+      animation: matrixCharSmoothChange 0.3s ease-out;
+      will-change: opacity; /* Performance hint for opacity animation */
+    }
+
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="text-gray-100">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
