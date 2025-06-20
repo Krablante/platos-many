@@ -36,7 +36,7 @@
     body {
       font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
       background-color: #0d1117; /* Even darker base for contrast */
-      background-image: 
+      background-image:
         radial-gradient(circle at 25px 25px, rgba(167, 139, 250, 0.08) 2%, transparent 0%), /* Subtle purple dots */
         radial-gradient(circle at 75px 75px, rgba(59, 130, 246, 0.08) 2%, transparent 0%); /* Subtle blue dots */
       background-size: 100px 100px;
@@ -56,7 +56,7 @@
       0%, 100% { border-color: #8B5CF6; box-shadow: 0 0 5px #8B5CF6, 0 0 10px #8B5CF6; }
       50% { border-color: #A78BFA; box-shadow: 0 0 15px #A78BFA, 0 0 20px #A78BFA; }
     }
-    
+
     .button-glitch {
       transition: all 0.2s ease-in-out;
       border: 1px solid transparent;
@@ -97,7 +97,7 @@
     .matrix-char-smooth {
       display: inline-block; /* Ensures proper rendering of animation */
       animation: matrixCharSmoothChange 0.3s ease-out;
-      will-change: opacity; /* Performance hint for opacity animation */
+      /* will-change: opacity; /* Removed to troubleshoot Chrome rendering glitch */
     }
 
   </style>
